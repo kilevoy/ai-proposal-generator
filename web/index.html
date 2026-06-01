@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-генератор коммерческих предложений | Demo</title>
+    <meta name="description" content="Данные об объекте → готовое коммерческое предложение за секунды: оффер, расчёт с НДС, условия. Интерактивный веб-формат + PDF." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
