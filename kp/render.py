@@ -64,7 +64,9 @@ td.nm{{font-weight:500}} td.c{{text-align:center;white-space:nowrap}} td.r,th.r{
 .sub td{{color:var(--muted)}}
 .totals{{margin-top:16px;margin-left:auto;width:320px;font-size:14px}}
 .totals div{{display:flex;justify-content:space-between;padding:6px 0}}
+.totals .net{{border-top:1px solid var(--line);margin-top:4px;padding-top:8px;font-weight:600;color:var(--ink)}}
 .totals .grand{{border-top:2px solid var(--line);margin-top:6px;padding-top:12px;font-size:20px;font-weight:800;color:var(--accent)}}
+.disc{{margin:14px 0 0;font-size:12.5px;color:var(--muted);font-style:italic}}
 .terms{{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}}
 .term{{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px}}
 .term b{{display:block;font-size:22px;color:var(--accent)}}
@@ -101,16 +103,18 @@ td.nm{{font-weight:500}} td.c{{text-align:center;white-space:nowrap}} td.r,th.r{
     <div class="totals">
       <div><span>Сумма без НДС</span><span>{fm(t['subtotal'])}</span></div>
       {f"<div><span>Скидка {t['discount_pct']:g}%</span><span>−{fm(t['discount'])}</span></div>" if t['discount'] else ''}
-      <div><span>НДС {t['vat_rate']:g}%</span><span>{fm(t['vat'])}</span></div>
-      <div class="grand"><span>Итого</span><span>{fm(t['total'])}</span></div>
+      {f"<div class='net'><span>Итого со скидкой (без НДС)</span><span>{fm(t['net'])}</span></div>" if t['discount'] else ''}
+      <div><span>НДС {t['vat_rate']:g}% (на сумму со скидкой)</span><span>{fm(t['vat'])}</span></div>
+      <div class="grand"><span>Итого с НДС</span><span>{fm(t['total'])}</span></div>
     </div>
+    {f'<p class="disc">{_esc(p.disclaimer)}</p>' if p.disclaimer else ''}
   </div>
 
   <div class="sec"><h2>Условия</h2>
     <div class="terms">
       <div class="term"><b>{p.lead_time_days}</b><span>дней — срок поставки/работ</span></div>
       <div class="term"><b>{p.warranty_months}</b><span>мес. гарантии</span></div>
-      <div class="term"><b>{p.advance_pct:g}%</b><span>аванс</span></div>
+      <div class="term"><b>{len(compose.payment_schedule(p))}</b><span>этапа оплаты</span></div>
     </div>
     <div style="margin-top:18px">{pay}</div>
   </div>

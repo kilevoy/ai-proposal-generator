@@ -28,15 +28,45 @@ def total(proposal: Proposal) -> float:
     return round(net(proposal) + vat_amount(proposal), 2)
 
 
-def payment_schedule(proposal: Proposal) -> list[dict]:
-    """Простой график оплаты: аванс + остаток по факту."""
+def category_totals(proposal: Proposal) -> dict:
+    """Валовые суммы (с учётом скидки и НДС, пропорционально) по типам позиций."""
+    sub = subtotal(proposal)
     grand = total(proposal)
+    equip = round(sum(it.amount for it in proposal.items if it.kind != "work"), 2)
+    if sub <= 0:
+        return {"equipment": 0.0, "work": 0.0}
+    equip_gross = round(grand * equip / sub, 2)
+    return {"equipment": equip_gross, "work": round(grand - equip_gross, 2)}
+
+
+def payment_schedule(proposal: Proposal) -> list[dict]:
+    """График оплаты.
+
+    Если есть и оборудование, и работы — трёхэтапный (закупка → поставка → монтаж),
+    что снимает риски обеих сторон. Иначе — классический аванс + остаток.
+    """
+    grand = total(proposal)
+    cats = category_totals(proposal)
+    equip, work = cats["equipment"], cats["work"]
+
+    if equip > 0 and work > 0:
+        advance = round(equip * 0.5, 2)        # аванс на закупку = 50% стоимости оборудования
+        delivery = round(equip - advance, 2)   # остаток за оборудование — по факту поставки
+        install = round(grand - advance - delivery, 2)  # работы — после актов
+        return [
+            {"name": "Аванс на закупку оборудования (50%)", "amount": advance,
+             "when": "при подписании договора"},
+            {"name": "Оплата оборудования по факту поставки", "amount": delivery,
+             "when": "при поставке на объект"},
+            {"name": "Монтаж и пусконаладка", "amount": install,
+             "when": "после подписания актов КС-2 / КС-3"},
+        ]
+
     advance = round(grand * proposal.advance_pct / 100, 2)
-    balance = round(grand - advance, 2)
     return [
         {"name": f"Аванс ({proposal.advance_pct:.0f}%)", "amount": advance,
          "when": "при подписании договора"},
-        {"name": f"Остаток ({100 - proposal.advance_pct:.0f}%)", "amount": balance,
+        {"name": f"Остаток ({100 - proposal.advance_pct:.0f}%)", "amount": round(grand - advance, 2),
          "when": "по факту поставки/выполнения работ"},
     ]
 

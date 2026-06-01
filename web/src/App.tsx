@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { proposal, stages, totals, payment, money } from "./data";
+import { proposal, stages, totals, payment, paymentStages, disclaimer, money } from "./data";
 
 type Phase = "idle" | "running" | "done";
 
@@ -142,9 +142,11 @@ function ProposalView() {
           <div className="kp-totals">
             <div><span>Сумма без НДС</span><span>{money(totals.subtotal)}</span></div>
             <div><span>Скидка {proposal.discountPct}%</span><span>−{money(totals.discount)}</span></div>
-            <div><span>НДС {proposal.vatRate}%</span><span>{money(totals.vat)}</span></div>
-            <div className="grand"><span>Итого</span><span>{money(totals.total)}</span></div>
+            <div className="net"><span>Итого со скидкой (без НДС)</span><span>{money(totals.net)}</span></div>
+            <div><span>НДС {proposal.vatRate}% (на сумму со скидкой)</span><span>{money(totals.vat)}</span></div>
+            <div className="grand"><span>Итого с НДС</span><span>{money(totals.total)}</span></div>
           </div>
+          <p className="kp-disc">{disclaimer}</p>
         </div>
 
         <div className="kp-sec">
@@ -152,7 +154,7 @@ function ProposalView() {
           <div className="kp-terms">
             <div><b>{proposal.leadTimeDays}</b><span>дней — срок</span></div>
             <div><b>{proposal.warrantyMonths}</b><span>мес. гарантии</span></div>
-            <div><b>{proposal.advancePct}%</b><span>аванс</span></div>
+            <div><b>{paymentStages}</b><span>этапа оплаты</span></div>
           </div>
           <div className="kp-pay">
             {payment.map((p, i) => (

@@ -10,6 +10,7 @@ class LineItem:
     qty: float
     unit: str = "шт"
     price: float = 0.0          # цена за единицу, без НДС
+    kind: str = "equipment"     # "equipment" (оборудование/материалы) | "work" (работы)
 
     @property
     def amount(self) -> float:
@@ -44,6 +45,10 @@ class Proposal:
     offer: str = ""                                      # цепляющий оффер с выгодой
     pitch: str = ""                                      # о компании / почему мы
     advantages: list[str] = field(default_factory=list)  # выгоды/преимущества
+    disclaimer: str = (
+        "Спецификация является предварительной. Окончательный состав и количество "
+        "оборудования утверждаются после выезда инженера на объект и технического расчёта."
+    )
 
     @staticmethod
     def from_dict(data: dict) -> "Proposal":
