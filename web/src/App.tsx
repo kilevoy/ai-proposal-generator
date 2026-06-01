@@ -161,6 +161,17 @@ function ProposalView() {
           </div>
         </div>
 
+        <div className="kp-sec">
+          <h3>Контакты</h3>
+          <div className="kp-mgr">
+            <div><b>{proposal.manager}</b><span>{proposal.managerRole}</span></div>
+            <div className="kp-mgr-c">
+              <a href={`tel:${proposal.phone}`}>{proposal.phone}</a>
+              <a href={`mailto:${proposal.email}`}>{proposal.email}</a>
+            </div>
+          </div>
+        </div>
+
         <div className="kp-cta">
           <button onClick={() => alert("Спасибо! Предложение принято. (демо)")}>Принять предложение</button>
           <p>Действительно 14 дней. Цены с учётом НДС {proposal.vatRate}%.</p>

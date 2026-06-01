@@ -26,6 +26,12 @@ class Proposal:
     city: str = ""
     subject: str = ""            # предмет КП
 
+    # контакты ответственного менеджера (отправителя КП)
+    manager: str = ""            # ФИО
+    manager_role: str = ""       # должность
+    phone: str = ""
+    email: str = ""
+
     # коммерция
     items: list[LineItem] = field(default_factory=list)
     discount_pct: float = 0.0

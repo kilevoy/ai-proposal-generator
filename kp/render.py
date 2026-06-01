@@ -72,6 +72,10 @@ td.nm{{font-weight:500}} td.c{{text-align:center;white-space:nowrap}} td.r,th.r{
 .pay{{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}}
 .pay span{{display:block;font-size:13px;color:var(--muted)}}
 .pay-amt{{font-weight:700}}
+.mgr{{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}}
+.mgr b{{font-size:16px}} .mgr span{{display:block;font-size:13px;color:var(--muted)}}
+.mgr-c{{display:flex;gap:18px;flex-wrap:wrap}}
+.mgr-c a{{color:var(--accent);text-decoration:none;font-weight:600}}
 .cta{{padding:32px 48px;text-align:center;background:var(--soft)}}
 .cta button{{border:0;background:linear-gradient(90deg,#2f5fd0,#6d4ee0);color:#fff;font-size:16px;font-weight:700;padding:14px 32px;border-radius:12px;cursor:pointer;box-shadow:0 8px 24px rgba(47,95,208,.3)}}
 .cta p{{color:var(--muted);font-size:13px;margin:12px 0 0}}
@@ -109,6 +113,17 @@ td.nm{{font-weight:500}} td.c{{text-align:center;white-space:nowrap}} td.r,th.r{
       <div class="term"><b>{p.advance_pct:g}%</b><span>аванс</span></div>
     </div>
     <div style="margin-top:18px">{pay}</div>
+  </div>
+
+  <div class="sec">
+    <h2>Контакты</h2>
+    <div class="mgr">
+      <div><b>{_esc(p.manager) or _esc(p.company)}</b><span>{_esc(p.manager_role) or 'менеджер проекта'}</span></div>
+      <div class="mgr-c">
+        {f'<a href="tel:{_esc(p.phone)}">{_esc(p.phone)}</a>' if p.phone else ''}
+        {f'<a href="mailto:{_esc(p.email)}">{_esc(p.email)}</a>' if p.email else ''}
+      </div>
+    </div>
   </div>
 
   <div class="cta">
